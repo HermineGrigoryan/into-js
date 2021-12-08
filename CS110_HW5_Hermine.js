@@ -119,17 +119,20 @@ p3();
 
 console.log('Problem 5a')
 
-function saveMatrixToFile(m, path){
+function saveMatrixToFile(m, path, file_name='p5a'){
     const fs = require('fs');
-    fs.writeFileSync(path + 'p5a.txt', m);
+    fs.writeFileSync(path + file_name + '.txt', JSON.stringify(m));
     console.log('The file has been written in the specified path...')
 }
 
+my_path = '/home/hermine/Desktop/JS codes/into-js/'
+
 function p5a(){
-    saveMatrixToFile([[1, 2, 3], [1, 2, 3]], '/home/hermine/Desktop/JS codes/')
+    saveMatrixToFile([[1, 2, 3], [7, 8, 9]], my_path)
 }
 
 p5a();
+
 
 // 5.b. (15 pts) The second, loadMatrixFromFile(path) function, returns a matrix
 // filled with the contents of a file that has been created using the function from p5.a.
@@ -137,16 +140,15 @@ p5a();
 
 console.log('Problem 5b')
 
-function loadMatrixFromFile(path){
-    const fs = require('fs')
-    fs.readFile(path, (err, data) => {
-        if (err) throw err;
-        console.log(data.toString());
-    })
+function loadMatrixFromFile(path, file_name='p5a'){
+    const fs = require('fs');
+    const fileContent = fs.readFileSync(path + file_name + '.txt');
+    const m = JSON.parse(fileContent);
+    return m;
 }
 
 function p5b(){
-    loadMatrixFromFile('/home/hermine/Desktop/JS codes/p5a.txt')
+    loadMatrixFromFile(my_path)
 }
 
 p5b();
@@ -154,3 +156,30 @@ p5b();
 // 5.c. (10 pts) Write a demo program that illustrates the use of these functions, e.g.
 // creates a matrix, saves it inside a file, loads that same matrix from that file and performs
 // integer operations on its values after determining the shape. See bonus.
+
+function matrixDemo(m, path, file_name){
+    saveMatrixToFile(m, path, file_name)
+    let loaded_m = loadMatrixFromFile(path, file_name)
+    let n_rows = loaded_m.length;
+    let n_cols = loaded_m[0].length;
+    console.log('Size of the matrix:', n_rows, 'x', n_cols)
+    console.log('Original matrix')
+    console.log(loaded_m)
+    // adding 1 whenever the number of rows in the matrix is 2
+    if(n_rows == 2){
+        for(let i = 0; i < n_rows; i++){
+            for(let j = 0; j < n_cols; j++){
+                loaded_m[i][j] += 1
+            }
+        }
+        console.log('Modified matrix')
+        console.log(loaded_m)
+    }
+}
+
+function p5c(){
+    matrixDemo([[1, 2, 3], [5, 6, 7]], my_path, 'p5c1')
+    matrixDemo([[1, 2, 3], [5, 6, 7], [7, 8, 9]], my_path, 'p5c2')
+}
+
+p5c();
